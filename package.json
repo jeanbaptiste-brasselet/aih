@@ -15,7 +15,6 @@
     "chai": "4.2.0",
     "eslint": "7.4.0",
     "eslint-config-google": "0.14.0",
-    "esm": "3.2.25",
     "lodash": "4.17.19",
     "mocha": "8.0.1",
     "nyc": "15.1.0",

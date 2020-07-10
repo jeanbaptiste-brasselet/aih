@@ -1,7 +1,7 @@
 {
     "diff": true,
     "extension": ["js"],
-    "require": ["esm", "chai/register-expect"],
+    "require": ["chai/register-expect"],
     "package": "./package.json",
     "reporter": "spec",
     "slow": 75,

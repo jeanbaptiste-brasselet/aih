@@ -14,5 +14,4 @@ function lazySafePipe([readable, transform, ...others]) {
   return transform;
 }
 
-export default lazySafePipe;
-
+module.exports = lazySafePipe;
