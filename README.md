@@ -6,32 +6,36 @@ Since node 10, stream (fs, mongo cursor, http get, ect) are considered as async 
 
 - [`map(mapFn, iterable)`](#map)
 - [`filter(filterFn, iterable)`](#filter)
+- [`take(size, iterable)`](#take)
+- [`tap(tapFn, iterable)`](#tap)
+- [`batch(size, iterable)`](#map)
+- [`filter(filterFn, iterable)`](#filter)
 - [`collect(iterable)`](#collect)
 - [`consume(iterable)`](#consume)
+
+All helpers are curried if needed to help with composition.
 
 ### Map
 
 Map a function or async function over an iterable.
 
 ```
-const got = require('got');
-const { Readable } = require('stream');
 const { map } = require('aih')
 
 async function * generate() {
   for (let i = 0; i < 9; i++) {
-    yield 'https://randomuser.me/api/';
+    yield i;
   }
 }
 
 // Fake node stream (could be mongo cursor / fs file, ...) 
-const randomUser = Readable.from(generate());
+const stream = Readable.from(generate());
 
-const getUser = map(url => got(url).json())(randomUser);
+const getItem = map(x => x + 1)(stream);
 
 async function test() {
-  for await (user of getUser) {
-    console.log(user);
+  for await (item of getItem) {
+    console.log(item); //2, 3, 4, ...
   }
 }
 
@@ -75,6 +79,103 @@ async function test() {
 test();
 ```
 
+### Take
+
+Take a number of item from an iterable
+
+```
+const {
+  take,
+  collect,
+} = require('aih')
+
+async function * generate() {
+  yield {
+    name: 'guest1',
+    type: 'guest',
+  };
+  yield {
+    name: 'admin1',
+    type: 'admin',
+  };
+  yield {
+    name: 'admin2',
+    type: 'admin'
+  };
+}
+
+const randomUser = generate();
+
+async function test() {
+  const result = await collect(take(1, randomUser));
+
+  console.log(result);
+  // [ { name: 'guest1', type: 'guest' } ]
+}
+
+test()
+```
+
+### Tap
+
+```
+const {
+  tap,
+  map,
+  collect
+} = require('aih');
+
+const _ = require('lodash/fp);
+
+async function * generate() {
+  for (let i = 0; i < 9; i++) {
+    yield i;
+  }
+}
+
+const asyncIterable = generate();
+
+async function test() {
+  const result = await _.flow(
+    tap(console.log),
+    map(x => x * 2),
+    collect,
+  )(asyncIterable);
+
+  console.log(result);
+  // 2, 4, 6, 8 ...
+}
+
+test()
+```
+
+
+### Batch
+
+```
+const {
+  batch,
+  collect,
+} = require('aih');
+
+async function * generate() {
+  for (let i = 0; i < 9; i++) {
+    yield i;
+  }
+}
+
+const asyncIterable = generate();
+
+async function test() {
+  const result = await collect(batch(2, asyncIterable));
+
+  console.log(result);
+  // [[1, 2], [3, 4], ...]
+}
+
+test();
+```
+
 ### Collect
 
 Collect values from an iterable
@@ -104,8 +205,40 @@ const randomUser = Readable.from(generate());
 async function test() {
   const users = await collect(randomUser); //array of users
 }
+
+test();
 ```
 
 ### Consume
 
 Consume an iterable, useful to treat a pipeline with no values in the end.
+
+```
+const {
+  tap,
+  consume,
+} = require('aih')
+
+async function * generate() {
+  yield {
+    name: 'guest1',
+    type: 'guest',
+  };
+  yield {
+    name: 'admin1',
+    type: 'admin',
+  };
+  yield {
+    name: 'admin2',
+    type: 'admin'
+  };
+}
+
+const randomUser = generate();
+
+async function test() {
+  await consume(tap(console.log, randomUser));
+}
+
+test();
+```
