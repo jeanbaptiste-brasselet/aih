@@ -13,10 +13,12 @@
   "license": "MIT",
   "devDependencies": {
     "chai": "4.2.0",
+    "csv-parse": "^4.10.1",
     "eslint": "7.4.0",
     "eslint-config-google": "0.14.0",
     "lodash": "4.17.19",
     "mocha": "8.0.1",
+    "mongodb": "^3.5.9",
     "nyc": "15.1.0",
     "sinon": "9.0.2"
   },
