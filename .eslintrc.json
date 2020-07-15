@@ -61,7 +61,7 @@
         "curly": "error",
         "default-case": "error",
         "default-case-last": "error",
-        "default-param-last": "error",
+        "default-param-last": "off",
         "dot-location": [
             "error",
             "property"
