@@ -7,6 +7,8 @@ Since node 10, stream (fs, mongo cursor, http get, ect) are considered as async 
 - [`map(mapFn, iterable)`](#map)
 - [`filter(filterFn, iterable)`](#filter)
 - [`take(size, iterable)`](#take)
+- [`drop(size, iterable)`](#drop)
+- [`slice(start, end, iterable)`](#slice)
 - [`tap(tapFn, iterable)`](#tap)
 - [`batch(size, iterable)`](#map)
 - [`filter(filterFn, iterable)`](#filter)
@@ -111,6 +113,76 @@ async function test() {
 
   console.log(result);
   // [ { name: 'guest1', type: 'guest' } ]
+}
+
+test()
+```
+
+### Drop
+
+```
+const {
+  drop,
+  collect,
+} = require('aih')
+
+async function * generate() {
+  yield {
+    name: 'guest1',
+    type: 'guest',
+  };
+  yield {
+    name: 'admin1',
+    type: 'admin',
+  };
+  yield {
+    name: 'admin2',
+    type: 'admin'
+  };
+}
+
+const randomUser = generate();
+
+async function test() {
+  const result = await collect(drop(2, randomUser));
+
+  console.log(result);
+  // [ { name: 'admin2', type: 'admin' } ]
+}
+
+test()
+```
+
+### Slice
+
+```
+const {
+  slice,
+  collect,
+} = require('aih')
+
+async function * generate() {
+  yield {
+    name: 'guest1',
+    type: 'guest',
+  };
+  yield {
+    name: 'admin1',
+    type: 'admin',
+  };
+  yield {
+    name: 'admin2',
+    type: 'admin'
+  };
+}
+
+const randomUser = generate();
+
+async function test() {
+  const result = await collect(slice(1, 2, randomUser));
+
+  console.log(result);
+  // [ { name: 'admin1', type: 'admin' } ]
 }
 
 test()

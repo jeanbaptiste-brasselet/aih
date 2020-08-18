@@ -28,5 +28,9 @@
   },
   "engines": {
     "node": ">=10"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jeanbaptiste-brasselet/aih.git"
   }
 }
