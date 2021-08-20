@@ -6,11 +6,12 @@ Since node 10, stream (fs, mongo cursor, http get, ect) are considered as async 
 
 - [`map(mapFn, iterable)`](#map)
 - [`filter(filterFn, iterable)`](#filter)
+- [`flatten(iterable)`](#flatten)
 - [`take(size, iterable)`](#take)
 - [`drop(size, iterable)`](#drop)
 - [`slice(start, end, iterable)`](#slice)
 - [`tap(tapFn, iterable)`](#tap)
-- [`batch(size, iterable)`](#map)
+- [`batch(size, iterable)`](#batch)
 - [`filter(filterFn, iterable)`](#filter)
 - [`collect(iterable)`](#collect)
 - [`consume(iterable)`](#consume)
@@ -75,6 +76,33 @@ const filterUser = filter(({ type }) => type === 'admin')(randomUser);
 async function test() {
   for await (user of filterUser) {
     console.log(user);
+  }
+}
+
+test();
+```
+
+### Flatten
+
+Flatten an iterable.
+
+```
+const { flatten } = require('aih')
+
+async function * generate() {
+  for (let i = 0; i < 9; i++) {
+    yield [i, i + 1];
+  }
+}
+
+// Fake node stream (could be mongo cursor / fs file, ...) 
+const stream = Readable.from(generate());
+
+const flattenedStream = flatten(stream);
+
+async function test() {
+  for await (item of flattenedStream) {
+    console.log(item); //1, 2, 2, 3, 3, ...
   }
 }
 
