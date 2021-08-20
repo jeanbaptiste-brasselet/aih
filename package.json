@@ -1,6 +1,6 @@
 {
   "name": "aih",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Async iterable helper",
   "main": "lib/index.js",
   "scripts": {
