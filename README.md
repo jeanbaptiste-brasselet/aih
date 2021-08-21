@@ -102,7 +102,7 @@ const flattenedStream = flatten(stream);
 
 async function test() {
   for await (item of flattenedStream) {
-    console.log(item); //1, 2, 2, 3, 3, ...
+    console.log(item); //1, 2, 2, 3, 3, 4,...
   }
 }
 
